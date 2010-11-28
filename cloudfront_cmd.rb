@@ -27,4 +27,4 @@ end
 distribution = AWS::Cloudfront::Distribution.new(options[:distribution_id],
                                 options[:access_key], options[:secret_key], options[:verbose])
 
-distribution.__send__(ARGV[0], ARGV[1])
+distribution.__send__(ARGV.shift, ARGV)

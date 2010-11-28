@@ -9,8 +9,22 @@ module AWS
         @verbose = verbose
       end
 
-      def uri
-        @uri ||= URI.parse("https://cloudfront.amazonaws.com/2010-07-15/distribution/#{@id}/config")
+      def set_default_root_object(objects)
+        object = objects.to_s
+        get_config unless @config
+        @config['DefaultRootObject'] = [object]
+        put_config
+      end
+
+      def invalidate_objects(objects)
+        get_config unless @config
+        post_invalidation(objects)
+      end
+
+      private
+
+      def resource_uri(path)
+        URI.parse("https://cloudfront.amazonaws.com/2010-11-01/distribution/#{@id}/#{path}")
       end
 
       def config
@@ -23,15 +37,8 @@ module AWS
         @etag
       end
 
-      def set_default_root_object(object)
-        get_config unless @config
-        @config['DefaultRootObject'] = [object]
-        put_config
-      end
-
-      private
-
       def get_config
+        uri = resource_uri('config')
         http = Net::HTTP.new(uri.host, uri.port)
         http.set_debug_output $stderr if @verbose
         http.use_ssl = true
@@ -44,6 +51,7 @@ module AWS
       end
 
       def put_config
+        uri = resource_uri('config')
         http = Net::HTTP.new(uri.host, uri.port)
         http.set_debug_output $stderr if @verbose
         http.use_ssl = true
@@ -55,6 +63,25 @@ module AWS
         unless response.kind_of?(Net::HTTPSuccess)
           raise XmlSimple.xml_in(response.body)['Error'].to_yaml
         end
+
+        response.body
+      end
+
+      def post_invalidation(objects)
+        uri = resource_uri('invalidation')
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.set_debug_output $stderr if @verbose
+        http.use_ssl = true
+        headers = build_authorization_headers
+        body = XmlSimple.xml_out(build_invalidation_batch(objects),
+                                 {'RootName' => 'InvalidationBatch'})
+        response = http.send_request('POST', uri.path, body, headers)
+
+        unless response.kind_of?(Net::HTTPSuccess)
+          raise XmlSimple.xml_in(response.body)['Error'].to_yaml
+        end
+
+        response.body
       end
 
       def build_signature(date_string)
@@ -63,12 +90,21 @@ module AWS
       end
 
       def build_authorization_headers
-        date_string = Time.now.strftime('%a, %d %b %Y %k:%M:%S %Z')
+        date_string = build_date_string
 
         headers = {}
         headers['Authorization'] = "AWS #{@aws_access_key}:#{build_signature(date_string)}"
         headers['Date'] = date_string
         headers
+      end
+
+      def build_date_string
+        Time.now.strftime('%a, %d %b %Y %k:%M:%S %Z')
+      end
+
+      def build_invalidation_batch(objects)
+        objects = [objects] unless objects.is_a?(Array)
+        {'Path' => objects, 'CallerReference' => [build_date_string] }
       end
     end
   end
