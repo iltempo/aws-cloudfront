@@ -103,8 +103,7 @@ module AWS
       end
 
       def build_invalidation_batch(objects)
-        objects = [objects] unless objects.is_a?(Array)
-        {'Path' => objects, 'CallerReference' => [build_date_string] }
+        {'Path' => Array(objects), 'CallerReference' => [build_date_string] }
       end
     end
   end
