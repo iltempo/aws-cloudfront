@@ -1,0 +1,50 @@
+= Amazon CloudFront Management Tool
+
+This tool enables you to manage your CloudFront distributions via Ruby or command line. 
+It is driven by functions you need to host complete static websites on CloudFront. At 
+the moment you can set the root object of a distribution and invalidate objects to trigger
+a re-deployment of certain files.
+
+== Requirements
+  gem install xml-simple
+
+== Usage
+
+=== Setting a root object
+
+Set the root object that gets returned when the root url of the distribution is called:
+  ./cloudfront_cmd.rb --distribution_id <id> --access-key <access key> --secret-access-key <secret key> set_default_root_object <object>
+
+<object> - a file name that exists on the distribution
+
+Example:
+  ./cloudfront_cmd.rb --distribution_id AB12FWEEXAMPLE --access-key 15B4D3461BDF1EXAMPLE --secret-access-key "AQE0diMbLRepdf3YBDF/EXAMPLE" set_default_root_object index.html
+
+=== Invalidating objects
+
+When a object on S3 gets overwritten by a newer version CloudFront doesn't trigger a distribution 
+automatically. Therefore you have to invalidate to objects after overwriting.
+
+  ./cloudfront_cmd.rb --distribution_id <id> --access-key <access key> --secret-access-key <secret key> invalidate_objects <list of objects>
+
+<object list> - a list of 
+
+Example:
+  ./cloudfront_cmd.rb --distribution_id AB12FWEEXAMPLE --access-key 15B4D3461BDF1EXAMPLE --secret-access-key "AQE0diMbLRepdf3YBDF/EXAMPLE" invalidate_objects "/index.html" "/styles.css"
+
+<id> - the AWS CloudFront distribution id. It can be found on the 
+{AWS Management Console}[https://console.aws.amazon.com/cloudfront/home].
+
+<access key> - your AWS access key id.
+
+<secret key> - the corresponding AWS secret access key
+
+
+==Author
+
+{Alexander Greim}[http://github.com/iltempo]
+
+== Copyright
+
+Copyright (c) 2010 {il tempo}[http://github.com/iltempo] -
+{Alexander Greim}[http://github.com/iltempo], released under the MIT license
