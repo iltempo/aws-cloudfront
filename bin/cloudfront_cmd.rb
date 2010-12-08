@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
-require File.dirname(__FILE__) + '/lib/aws/cloudfront'
+require 'optparse'
+require File.expand_path File.join(File.dirname(__FILE__), '..', '/lib/aws-cloudfront')
 
 options = {}
 OptionParser.new do |opts|
