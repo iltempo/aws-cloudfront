@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Alexander Greim", "Luke van der Hoeven", "TJ Singleton"]
   s.email       = ["alexxx@iltempo.de", "hungerandthirst@gmail.com", "tj@salescrunch.com"]
-  s.homepage    = "https://github.com/crunchy/aws-cloudfront"
+  s.homepage    = "https://github.com/iltempo/aws-cloudfront"
   s.summary     = %q{Library and command line tool for managing CloudFront.}
   s.description = %q{This tool enables you to manage your CloudFront distributions via Ruby or command line. It is
                      driven by functions you need to host complete static websites on CloudFront. At the moment you can
