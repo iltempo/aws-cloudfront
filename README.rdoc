@@ -1,43 +1,62 @@
 = Amazon CloudFront Management Tool
 
 This tool enables you to manage your CloudFront distributions via Ruby or command line. 
-It is driven by functions you need to host complete static websites on CloudFront. At 
-the moment you can set the root object of a distribution and invalidate objects to trigger
-a re-deployment of certain files.
 
 == Requirements
-  gem install xml-simple
+  gem install aws-cloudfront
 
-== Usage
+== General Usage
 
-=== Setting a root object
+  cloudfront_cmd.rb <parameters> <command>
 
-Set the root object that gets returned when the root url of the distribution is called:
-  ./cloudfront_cmd.rb --distribution_id <id> --access-key <access key> --secret-access-key <secret key> set_default_root_object <object>
 
-<object> - a file name that exists on the distribution
+=== Parameters
 
-Example:
-  ./cloudfront_cmd.rb --distribution_id AB12FWEEXAMPLE --access-key 15B4D3461BDF1EXAMPLE --secret-access-key "AQE0diMbLRepdf3YBDF/EXAMPLE" set_default_root_object index.html
+  --access-key <access key>
 
-=== Invalidating objects
+your AWS access key id
 
-When a object on S3 gets overwritten by a newer version CloudFront doesn't trigger a distribution 
-automatically. Therefore you have to invalidate to objects after overwriting.
+  --secret-access-key <secret key>
 
-  ./cloudfront_cmd.rb --distribution_id <id> --access-key <access key> --secret-access-key <secret key> invalidate_objects <list of objects>
+the corresponding AWS secret access key
 
-<object list> - a list of 
+  --distribution-id <id>
 
-Example:
-  ./cloudfront_cmd.rb --distribution_id AB12FWEEXAMPLE --access-key 15B4D3461BDF1EXAMPLE --secret-access-key "AQE0diMbLRepdf3YBDF/EXAMPLE" invalidate_objects "/index.html" "/styles.css"
-
-<id> - the AWS CloudFront distribution id. It can be found on the 
+the AWS CloudFront distribution id. It can be found on the
 {AWS Management Console}[https://console.aws.amazon.com/cloudfront/home].
 
-<access key> - your AWS access key id.
 
-<secret key> - the corresponding AWS secret access key
+== Setting a root object
+
+Set the root object that gets returned when the root url of the distribution is called:
+
+  cloudfront_cmd.rb <parameters> set_default_root_object <object>
+
+<object> - a file name that exists in the distribution
+
+Example:
+  cloudfront_cmd.rb \
+    --distribution-id AB12FWEEXAMPLE \
+    --access-key 15B4D3461BDF1EXAMPLE \
+    --secret-access-key "AQE0diMbLRepdf3YBDF/EXAMPLE" \
+    set_default_root_object "index.html"
+
+
+== Invalidating objects
+
+If an object on S3 gets overwritten by a newer version a redistribution through CloudFront isn't
+triggered automatically. Therefore you have to invalidate the objects afterwards.
+
+  cloudfront_cmd.rb <parameters> invalidate_objects <list of objects>
+
+<list of objects> - space seperated list of absolute path names for files to invalidate
+
+Example:
+  cloudfront_cmd.rb \
+    --distribution-id AB12FWEEXAMPLE \
+    --access-key 15B4D3461BDF1EXAMPLE \
+    --secret-access-key "AQE0diMbLRepdf3YBDF/EXAMPLE" \
+    invalidate_objects "/index.html" "/styles.css"
 
 
 ==Author
