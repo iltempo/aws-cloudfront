@@ -10,10 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ["alexxx@iltempo.de", "hungerandthirst@gmail.com", "tj@salescrunch.com"]
   s.homepage    = "https://github.com/iltempo/aws-cloudfront"
   s.summary     = %q{Library and command line tool for managing CloudFront.}
-  s.description = %q{This tool enables you to manage your CloudFront distributions via Ruby or command line. It is
-                     driven by functions you need to host complete static websites on CloudFront. At the moment you can
-                     set the root object of a distribution and invalidate objects to trigger a re-deployment of certain
-                     files.}
+  s.description = %q{This tool enables you to manage your CloudFront distributions via Ruby or command line.}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
