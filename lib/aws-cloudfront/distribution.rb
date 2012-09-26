@@ -24,7 +24,7 @@ module AWS
       private
 
       def resource_uri(path)
-        URI.parse("https://cloudfront.amazonaws.com/2010-11-01/distribution/#{@id}/#{path}")
+        URI.parse("https://cloudfront.amazonaws.com/2012-05-05/distribution/#{@id}/#{path}")
       end
 
       def config
