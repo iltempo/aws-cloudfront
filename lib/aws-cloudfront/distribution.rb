@@ -24,7 +24,7 @@ module AWS
       private
 
       def resource_uri(path)
-        URI.parse("https://cloudfront.amazonaws.com/2012-05-05/distribution/#{@id}/#{path}")
+        URI.parse("https://cloudfront.amazonaws.com/2012-07-01/distribution/#{@id}/#{path}")
       end
 
       def config
@@ -103,7 +103,10 @@ module AWS
       end
 
       def build_invalidation_batch(objects)
-        {'Path' => Array(objects), 'CallerReference' => [build_date_string] }
+      {'Paths' => {
+        'Items' => {'Path' => Array(objects)},
+        'Quantity' => [objects.length],
+      }, 'CallerReference' => [build_date_string]}
       end
     end
   end
