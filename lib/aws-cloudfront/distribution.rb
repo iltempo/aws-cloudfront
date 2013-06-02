@@ -42,12 +42,11 @@ module AWS
         http = Net::HTTP.new(uri.host, uri.port)
         http.set_debug_output $stderr if @verbose
         http.use_ssl = true
-        response, body = http.get(uri.path, build_authorization_headers)
-
+        response = http.get(uri.path, build_authorization_headers)
         raise 'Distribution could not be loaded' unless response.kind_of?(Net::HTTPSuccess)
 
         @etag = response.fetch('Etag')
-        @config = XmlSimple.xml_in(body)
+        @config = XmlSimple.xml_in(response.body)
       end
 
       def put_config
