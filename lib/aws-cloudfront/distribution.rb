@@ -98,7 +98,7 @@ module AWS
       end
 
       def build_date_string
-        Time.now.strftime('%a, %d %b %Y %k:%M:%S %Z')
+        Time.now.utc.strftime('%a, %d %b %Y %k:%M:%S %Z')
       end
 
       def build_invalidation_batch(objects)
